@@ -10,6 +10,8 @@ import re
 from strands import Agent
 from strands.models import BedrockModel
 
+IST = datetime.timezone(datetime.timedelta(hours=5, minutes=30))
+
 SYSTEM_PROMPT = """You read photos of Indian college notices and extract every dated \
 commitment as a calendar event.
 
@@ -63,7 +65,10 @@ def extract_events(image_bytes: bytes, image_format: str, model_id: str, region:
     Returns a list of raw event dicts (not yet validated — see schema.py).
     Raises only if both attempts fail to produce parseable JSON.
     """
-    today = datetime.date.today().isoformat()
+    # Lambda's system clock is UTC; "today" needs to be IST or relative dates
+    # ("tomorrow", "next Friday") resolve to the wrong day in the ~5.5-hour
+    # window after UTC midnight but before IST midnight.
+    today = datetime.datetime.now(IST).date().isoformat()
     agent = _build_agent(model_id, region, today)
 
     prompt = [
