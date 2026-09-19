@@ -205,7 +205,9 @@ function downloadIcs(content, filename) {
 
 // --- Wiring ----------------------------------------------------------------
 
-els.dropzone.addEventListener("click", () => els.fileInput.click());
+// The label's native `for` association already opens the picker on click;
+// only keyboard activation needs a manual handler (labels don't get Enter
+// treated as a click the way a real button does).
 els.dropzone.addEventListener("keydown", (e) => {
   if (e.key === "Enter" || e.key === " ") { e.preventDefault(); els.fileInput.click(); }
 });

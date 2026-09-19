@@ -54,9 +54,10 @@ Resources:
           BEDROCK_REGION: !Ref BedrockRegion
           MODEL_ID: !Ref ModelId
       Policies:
-        - S3ReadPolicy:
-            BucketName: !Ref UploadsBucket
         - Statement:
+            - Effect: Allow
+              Action: s3:GetObject
+              Resource: !Sub "${UploadsBucket.Arn}/*"
             - Effect: Allow
               Action: bedrock:InvokeModel
               Resource: !Sub "arn:aws:bedrock:${BedrockRegion}::foundation-model/${ModelId}"
