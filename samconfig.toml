@@ -1,0 +1,17 @@
+version = 0.1
+
+[default.deploy.parameters]
+stack_name = "notice-to-calendar"
+region = "ap-south-1"
+resolve_s3 = true
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = false
+disable_rollback = false
+parameter_overrides = "ModelId=\"anthropic.claude-3-haiku-20240307-v1:0\" BedrockRegion=\"ap-south-1\" AllowedOrigin=\"*\""
+
+[default.build.parameters]
+cached = true
+parallel = true
+
+[default.sync.parameters]
+watch = true

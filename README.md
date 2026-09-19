@@ -16,7 +16,7 @@ deadlines as calendar events.
 
 ## Architecture
 
-_Diagram: see `docs/architecture.png`._
+![Architecture diagram](docs/architecture.png)
 
 ```
 Browser (S3 + CloudFront)
@@ -76,7 +76,10 @@ aws cloudfront create-invalidation --distribution-id <id> --paths "/*"
 
 ## Credits
 
-Sample notice images in `samples/` are used for prompt development and testing only.
+Sample notice images in `samples/` are synthetic stand-ins (generated, not photographed) —
+real WhatsApp notice photos weren't available in this build environment. They mimic the
+formatting quirks a real notice has: day-first dates, a reference number that is not an
+event, and several dated items in one notice. Used for prompt development and testing only.
 
 ## Known trade-offs (deliberate)
 

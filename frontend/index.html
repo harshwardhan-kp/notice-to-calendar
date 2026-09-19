@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notice to Calendar</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <h1>Notice → Calendar</h1>
+      <p class="tagline">Drop a photo of a college notice. Get every deadline as a calendar file.</p>
+    </header>
+
+    <section id="state-empty" class="state">
+      <label id="dropzone" class="dropzone" for="file-input" tabindex="0">
+        <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 16V4M12 4L7 9M12 4L17 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="dropzone-text">Drop a notice photo here, or click to choose one</span>
+        <input id="file-input" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+      </label>
+      <button id="try-sample" class="link-button" type="button">Try a sample notice instead</button>
+    </section>
+
+    <section id="state-working" class="state" hidden>
+      <div class="scan-frame">
+        <img id="working-thumb" class="working-thumb" alt="Uploaded notice">
+        <div class="scan-line"></div>
+      </div>
+      <p class="working-text" id="working-text">Reading the notice…</p>
+    </section>
+
+    <section id="state-results" class="state" hidden>
+      <div class="results-header">
+        <h2>Found <span id="event-count">0</span> event<span id="event-count-plural">s</span></h2>
+        <div class="results-actions">
+          <button id="add-all" class="btn btn-primary" type="button">Add all to calendar</button>
+          <button id="another" class="link-button" type="button">Try another notice</button>
+        </div>
+      </div>
+      <p id="warnings" class="warnings" hidden></p>
+      <ul id="event-list" class="event-list"></ul>
+    </section>
+
+    <section id="state-error" class="state" hidden>
+      <p id="error-text" class="error-text">Something went wrong.</p>
+      <button id="retry" class="btn btn-primary" type="button">Try again</button>
+    </section>
+
+    <footer class="footer">
+      <p>Built for the Bharat Builds Tour hackathon · Bedrock + Strands, serverless on AWS</p>
+    </footer>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
