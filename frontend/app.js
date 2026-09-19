@@ -10,7 +10,6 @@ const els = {
   error: document.getElementById("state-error"),
   dropzone: document.getElementById("dropzone"),
   fileInput: document.getElementById("file-input"),
-  trySample: document.getElementById("try-sample"),
   workingThumb: document.getElementById("working-thumb"),
   workingText: document.getElementById("working-text"),
   eventCount: document.getElementById("event-count"),
@@ -22,6 +21,8 @@ const els = {
   errorText: document.getElementById("error-text"),
   retry: document.getElementById("retry"),
 };
+
+const sampleTriggers = document.querySelectorAll(".js-sample");
 
 let currentEvents = [];
 let lastFile = null;
@@ -42,18 +43,18 @@ function showError(message) {
 async function processFile(file) {
   lastFile = file;
   els.workingThumb.src = URL.createObjectURL(file);
-  els.workingText.textContent = "Reading the notice…";
+  els.workingText.textContent = "reading the notice";
   showState("working");
 
   try {
     const { uploadUrl, key } = await requestUploadUrl(file);
     await putToS3(uploadUrl, file);
-    els.workingText.textContent = "Finding the dates…";
+    els.workingText.textContent = "finding the dates";
     const { events, warnings } = await requestExtraction(key);
     renderResults(events, warnings);
   } catch (err) {
     console.error(err);
-    showError(err.message || "Something went wrong reading that notice.");
+    showError(err.message || "something went wrong reading that notice");
   }
 }
 
@@ -63,7 +64,7 @@ async function requestUploadUrl(file) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ filename: file.name, contentType: file.type || "image/jpeg" }),
   });
-  if (!res.ok) throw new Error("Could not start the upload. Try again.");
+  if (!res.ok) throw new Error("could not start the upload - try again");
   return res.json();
 }
 
@@ -73,7 +74,7 @@ async function putToS3(uploadUrl, file) {
     headers: { "Content-Type": file.type || "image/jpeg" },
     body: file,
   });
-  if (!res.ok) throw new Error("Upload failed. Try again.");
+  if (!res.ok) throw new Error("upload failed - try again");
 }
 
 async function requestExtraction(key) {
@@ -82,13 +83,13 @@ async function requestExtraction(key) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ key }),
   });
-  if (!res.ok) throw new Error("Could not read that notice. Try again.");
+  if (!res.ok) throw new Error("could not read that notice - try again");
   return res.json();
 }
 
 // --- Rendering ---------------------------------------------------------
 
-const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const MONTHS = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
 
 function formatTime(hhmm) {
   const [h, m] = hhmm.split(":").map(Number);
@@ -123,22 +124,26 @@ function renderResults(events, warnings) {
   events.forEach((event, index) => {
     const [, month, day] = event.date.split("-").map(Number);
     const li = document.createElement("li");
-    li.className = "event-card";
+    li.className = "event";
     li.innerHTML = `
-      <div class="event-date">
-        <span class="day">${day}</span>
-        <span class="month">${MONTHS[month - 1]}</span>
-      </div>
+      <span class="event-dot" aria-hidden="true"></span>
       <div class="event-body">
-        <p class="event-title">${escapeHtml(event.title)}${event.confidence === "low" ? '<span class="event-low-confidence">unsure</span>' : ""}</p>
+        <p class="event-date">${brackets(`${day} ${MONTHS[month - 1]}`)}</p>
+        <p class="event-title">${escapeHtml(event.title)}${event.confidence === "low" ? `<span class="pill">${brackets("unsure")}</span>` : ""}</p>
         <p class="event-meta">${escapeHtml(eventMetaLine(event))}</p>
       </div>
-      <button class="event-add" type="button" data-index="${index}">Add</button>
+      <button class="btn btn-secondary event-add" type="button" data-index="${index}">add</button>
     `;
     els.eventList.appendChild(li);
   });
 
   showState("results");
+}
+
+// Interface strings — dates, statuses, credits — wear square brackets, and the
+// brackets themselves are the one place signal red appears in running text.
+function brackets(text) {
+  return `<span class="brk">[</span>${escapeHtml(text)}<span class="brk">]</span>`;
 }
 
 function escapeHtml(str) {
@@ -226,16 +231,18 @@ els.dropzone.addEventListener("drop", (e) => {
   if (file) processFile(file);
 });
 
-els.trySample.addEventListener("click", async () => {
+async function loadSampleNotice() {
   try {
     const res = await fetch(SAMPLE_NOTICE_URL);
     const blob = await res.blob();
     const file = new File([blob], "sample-notice.jpg", { type: blob.type || "image/jpeg" });
     processFile(file);
   } catch {
-    showError("Could not load the sample notice.");
+    showError("could not load the sample notice");
   }
-});
+}
+
+sampleTriggers.forEach((el) => el.addEventListener("click", loadSampleNotice));
 
 els.eventList.addEventListener("click", (e) => {
   const btn = e.target.closest(".event-add");

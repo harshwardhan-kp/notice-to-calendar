@@ -3,57 +3,106 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notice to Calendar</title>
+<title>notice to calendar</title>
+<link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="page">
-    <header class="header">
-      <h1>Notice → Calendar</h1>
-      <p class="tagline">Drop a photo of a college notice. Get every deadline as a calendar file.</p>
-    </header>
 
-    <section id="state-empty" class="state">
+  <header class="nav">
+    <div class="nav-identity">
+      <span class="wordmark">notice to calendar</span>
+      <span class="nav-credit">runs on <span class="brk">[</span>bedrock<span class="brk">]</span></span>
+    </div>
+    <nav class="nav-capsule">
+      <a class="bracket-link bracket-link-ink" href="#how"><span class="brk">[</span>how it works<span class="brk">]</span></a>
+      <button class="bracket-link bracket-link-ink js-sample" type="button"><span class="brk">[</span>a sample notice<span class="brk">]</span></button>
+    </nav>
+  </header>
+
+  <main>
+
+    <section class="band hero">
+      <h1 class="display">the notice is <em>paper</em>; the deadline is <em>yours</em></h1>
+      <p class="subhead">drop a photo of a college notice - every date, time and venue printed on it comes back as a calendar file</p>
+    </section>
+
+    <section id="state-empty" class="band">
       <label id="dropzone" class="dropzone" for="file-input" tabindex="0">
-        <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M12 16V4M12 4L7 9M12 4L17 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span class="dropzone-text">Drop a notice photo here, or click to choose one</span>
+        <span class="mark mark-tl" aria-hidden="true"></span>
+        <span class="mark mark-tr" aria-hidden="true"></span>
+        <span class="mark mark-bl" aria-hidden="true"></span>
+        <span class="mark mark-br" aria-hidden="true"></span>
+        <span class="dropzone-label"><span class="brk">[</span>drop a notice photo here<span class="brk">]</span></span>
+        <span class="dropzone-sub">or click to choose one - jpeg, png or webp</span>
         <input id="file-input" type="file" accept="image/jpeg,image/png,image/webp" hidden>
       </label>
-      <button id="try-sample" class="link-button" type="button">Try a sample notice instead</button>
+      <button class="bracket-link js-sample" type="button"><span class="brk">[</span>try a sample notice instead<span class="brk">]</span></button>
+
+      <ol id="how" class="steps">
+        <li class="step">
+          <span class="step-index"><span class="brk">[</span>01<span class="brk">]</span></span>
+          <span class="step-text">you photograph the notice board on your way past it</span>
+        </li>
+        <li class="step">
+          <span class="step-index"><span class="brk">[</span>02<span class="brk">]</span></span>
+          <span class="step-text">a Bedrock model reads the sheet and resolves every date against IST</span>
+        </li>
+        <li class="step">
+          <span class="step-index"><span class="brk">[</span>03<span class="brk">]</span></span>
+          <span class="step-text">you take away an .ics file your calendar already understands</span>
+        </li>
+      </ol>
     </section>
 
-    <section id="state-working" class="state" hidden>
+    <section id="state-working" class="band" hidden>
       <div class="scan-frame">
-        <img id="working-thumb" class="working-thumb" alt="Uploaded notice">
-        <div class="scan-line"></div>
+        <img id="working-thumb" class="working-thumb" alt="the notice being read">
       </div>
-      <p class="working-text" id="working-text">Reading the notice…</p>
+      <p class="status"><span class="status-cursor" aria-hidden="true"></span><span class="status-text" id="working-text">reading the notice</span></p>
     </section>
 
-    <section id="state-results" class="state" hidden>
+    <section id="state-results" class="band" hidden>
       <div class="results-header">
-        <h2>Found <span id="event-count">0</span> event<span id="event-count-plural">s</span></h2>
+        <h2 class="results-title">found <span class="brk">[</span><span id="event-count">0</span> event<span id="event-count-plural">s</span><span class="brk">]</span></h2>
         <div class="results-actions">
-          <button id="add-all" class="btn btn-primary" type="button">Add all to calendar</button>
-          <button id="another" class="link-button" type="button">Try another notice</button>
+          <button id="add-all" class="btn btn-primary" type="button">add all to calendar</button>
+          <button id="another" class="bracket-link" type="button"><span class="brk">[</span>try another notice<span class="brk">]</span></button>
         </div>
       </div>
       <p id="warnings" class="warnings" hidden></p>
       <ul id="event-list" class="event-list"></ul>
     </section>
 
-    <section id="state-error" class="state" hidden>
-      <p id="error-text" class="error-text">Something went wrong.</p>
-      <button id="retry" class="btn btn-primary" type="button">Try again</button>
+    <section id="state-error" class="band" hidden>
+      <p class="error-label"><span class="brk">[</span>could not read that<span class="brk">]</span></p>
+      <p id="error-text" class="error-text">something went wrong</p>
+      <button id="retry" class="btn btn-primary" type="button">try again</button>
     </section>
 
-    <footer class="footer">
-      <p>Built for the Bharat Builds Tour hackathon · Bedrock + Strands, serverless on AWS</p>
-    </footer>
   </main>
+
+  <footer class="footer">
+    <div class="footer-row">
+      <div class="footer-identity">
+        <span class="wordmark wordmark-footer">notice to calendar</span>
+        <span class="footer-tagline"><span class="brk">[</span>no deadline left on the wall<span class="brk">]</span></span>
+      </div>
+      <div class="footer-credits">
+        <span class="footer-credits-label">built with</span>
+        <div class="footer-credits-row">
+          <span class="bracket-link"><span class="brk">[</span>bedrock<span class="brk">]</span></span>
+          <span class="bracket-link"><span class="brk">[</span>strands<span class="brk">]</span></span>
+          <span class="bracket-link"><span class="brk">[</span>lambda<span class="brk">]</span></span>
+          <span class="bracket-link"><span class="brk">[</span>s3<span class="brk">]</span></span>
+        </div>
+        <span class="footer-note">for the Bharat Builds Tour hackathon</span>
+      </div>
+    </div>
+    <div class="monument-frame" aria-hidden="true">
+      <span class="monument">notice to calendar</span>
+    </div>
+  </footer>
 
   <script src="config.js"></script>
   <script src="app.js"></script>

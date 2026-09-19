@@ -1,0 +1,155 @@
+/* antimattr design system — tokens
+   Source: claude.ai/design/p/290ebd5e-8078-4456-8312-fe3d2e6004bf
+   Transcribed verbatim from the system's tokens/colors.css, typography.css,
+   spacing.css, effects.css and base.css. Do not edit values here; re-sync instead.
+
+   Font note: the system ships Instrument Serif as brand-supplied .ttf binaries and
+   loads Schibsted Grotesk + Geist Mono from Google Fonts. This app loads all three
+   from Google Fonts (same families, no substitutes). */
+
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:wght@400..900&display=swap');
+
+/* ── colour ──────────────────────────────────────────────────────────────── */
+:root{
+/* ink */
+--ink-05:rgb(5,5,5);
+--ink-08:rgb(20,20,20);
+--ink-12:rgb(18,18,18);
+--ink-13:rgb(13,13,13);
+--ink-13-80:rgba(33,33,33,0.8);
+--ink-20:rgb(32,32,32);
+--ink-27:rgb(69,69,69);
+--ink-37:rgb(94,94,94);
+--ink-42:rgb(106,106,106);
+/* paper */
+--paper:rgb(238,238,238);
+--paper-shade:rgb(233,233,233);
+--paper-white:rgb(255,255,255);
+--grey-73:rgb(186,186,186);
+--grey-80:rgb(204,204,204);
+/* translucent fills */
+--fill-grey-7:rgba(106,106,106,0.07);
+--fill-grey-10:rgba(106,106,106,0.1);
+--fill-grey-15:rgba(106,106,106,0.15);
+--fill-hairline:rgba(186,186,186,0.302);
+--fill-white-15:rgba(255,255,255,0.15);
+/* signal red — the one brand accent */
+--red:rgb(225,9,9);
+--red-25:rgba(225,9,9,0.251);
+--red-link:rgb(231,58,58);
+--red-tint:rgb(241,142,142);
+--red-deep:rgb(124,5,5);
+/* product hues — washes and dots only */
+--azure:rgb(16,131,250);
+--amber:rgb(254,167,16);
+--green:rgb(0,134,40);
+}
+
+/* semantic aliases — prefer these in product code */
+:root{
+--text-primary:var(--ink-13);
+--text-secondary:var(--ink-37);
+--text-muted:var(--ink-42);
+--text-inverse:var(--paper-white);
+--text-signal:var(--red);
+--text-link:var(--red);
+--text-link-hover:var(--red-link);
+
+--surface-page:var(--paper);
+--surface-raised:var(--paper-white);
+--surface-ink:var(--ink-08);
+--surface-fill-subtle:var(--fill-grey-7);
+--surface-fill:var(--fill-grey-10);
+--surface-fill-strong:var(--fill-grey-15);
+
+--border-hairline:var(--fill-hairline);
+--border-signal:var(--red-tint);
+--border-on-ink:var(--fill-white-15);
+--ring-ink:var(--ink-13);
+--ring-hairline:rgba(186,186,186,0.3);
+
+--dot-mnemosyne:var(--red);
+--dot-soteria:var(--azure);
+--dot-athena:var(--amber);
+}
+
+/* ── type ────────────────────────────────────────────────────────────────── */
+:root{
+--font-serif:"Instrument Serif",ui-serif,Georgia,"Times New Roman",serif;
+--font-sans:"Schibsted Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+--font-mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+
+--weight-regular:400;
+--weight-medium:500;
+
+--size-14:14px;  --lh-14:20px;
+--size-16:16px;  --lh-16:24px;
+--size-18:18px;  --lh-18:26px;
+--size-24:24px;  --lh-24:32px;
+--size-44:44px;  --lh-44:56px;  --lh-44-tight:52px;
+--size-304:304px;--lh-304:304px;
+
+--type-display:var(--weight-regular) var(--size-44)/var(--lh-44) var(--font-serif);
+--type-title:var(--weight-medium) var(--size-44)/var(--lh-44) var(--font-sans);
+--type-heading:var(--weight-regular) var(--size-24)/var(--lh-24) var(--font-sans);
+--type-subtitle:var(--weight-regular) var(--size-18)/var(--lh-18) var(--font-sans);
+--type-body:var(--weight-regular) var(--size-16)/var(--lh-16) var(--font-sans);
+--type-wordmark:var(--weight-medium) var(--size-18)/var(--lh-18) var(--font-sans);
+--type-monument:var(--weight-medium) var(--size-304)/var(--lh-304) var(--font-sans);
+--type-label:var(--weight-regular) var(--size-16)/var(--lh-16) var(--font-mono);
+--type-caption:var(--weight-regular) var(--size-14)/var(--lh-14) var(--font-mono);
+--type-caption-strong:var(--weight-medium) var(--size-14)/var(--lh-14) var(--font-mono);
+}
+
+/* ── spacing, rhythm, radii ──────────────────────────────────────────────── */
+:root{
+--space-xxxs:2px;
+--space-xxs:6px;
+--space-xs:8px;
+--space-s:10px;
+--space-sm:12px;
+--space-m:16px;
+--space-l:24px;
+--space-xl:44px;
+--space-xxl:48px;
+--space-section:72px;
+--space-columns:144px;
+
+--section-pad-y:72px;
+--section-pad-x:60px;
+--content-max:1440px;
+--content-narrow:1320px;
+--content-media:900px;
+
+--radius-xs:6px;
+--radius-sm:8px;
+--radius-lg:24px;
+--radius-pill:50px;
+
+--control-height:44px;
+--header-height:92px;
+}
+
+/* ── effects — no drop shadows; "elevation" is a 1px spread-0 ring ───────── */
+:root{
+--ring-1-hairline:0 0 0 1px rgba(186,186,186,0.3);
+--ring-1-ink:0 0 0 1px rgb(13,13,13);
+--ring-inset-white:inset 0 0 0 1px rgba(255,255,255,0.1);
+--hairline:1px solid rgba(186,186,186,0.302);
+
+--blur-wordmark:blur(2px);
+--blur-nav:blur(6px);
+--blur-control:blur(7px);
+
+--ease:cubic-bezier(0.44,0,0.56,1);
+--dur-fast:120ms;
+--dur:200ms;
+--dur-slow:400ms;
+}
+
+/* ── base ────────────────────────────────────────────────────────────────── */
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--surface-page);color:var(--text-primary);font:var(--type-body);text-wrap:pretty}
+a{color:var(--text-link);text-decoration:none;transition:color var(--dur) var(--ease)}
+a:hover{color:var(--text-link-hover)}
+::selection{background:var(--red-25);color:var(--text-primary)}
