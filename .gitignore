@@ -1,0 +1,10 @@
+.aws-sam/
+samconfig.local.toml
+__pycache__/
+*.pyc
+.DS_Store
+.env
+node_modules/
+*.log
+out*.json
+test-invoke.json
