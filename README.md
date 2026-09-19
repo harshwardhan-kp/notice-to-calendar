@@ -6,7 +6,12 @@ Built for the **Bharat Builds Tour — First Commit hackathon** (Ship It track),
 
 ## Live URL
 
-_TBD — filled in once deployed._
+Backend is live: `https://8rghvi6s53.execute-api.ap-south-1.amazonaws.com`
+
+Frontend URL (CloudFront) is pending — CloudFront and Bedrock invocation are both
+currently blocked by an AWS new-account verification hold (confirmed via both APIs,
+see `docs/status.md`). The stack deploys everything else now via a `DeployCdn` toggle;
+CloudFront gets added and this section updated once the hold clears.
 
 ## The problem
 
@@ -51,22 +56,28 @@ Idle cost is zero.
 ## Local setup
 
 ```bash
-# backend
-cd backend
-pip install -r requirements.txt -t .
-
-# confirm Bedrock model access first (single hard blocker)
-aws bedrock-runtime invoke-model --region <region> --model-id <model-id> \
+# confirm Bedrock model access first (single hard blocker) — see docs/status.md
+# if this account is under AWS's new-account verification hold
+aws bedrock-runtime invoke-model --region ap-south-1 --model-id anthropic.claude-3-haiku-20240307-v1:0 \
   --body '{"anthropic_version":"bedrock-2023-05-31","max_tokens":10,"messages":[{"role":"user","content":"hi"}]}' \
   --cli-binary-format raw-in-base64-out out.json && cat out.json
 
-# deploy
-cd ..
-sam build && sam deploy --guided
+# tune the extraction prompt locally against real photos, no AWS infra needed
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r backend/requirements.txt
+python3 backend/local_test.py
 
-# frontend
-aws s3 sync frontend/ s3://<site-bucket> --delete
-aws cloudfront create-invalidation --distribution-id <id> --paths "/*"
+# deploy everything (first time: sam deploy --guided instead of `sam deploy`)
+sam build && sam deploy
+# CloudFront is behind DeployCdn — deploys false-by-default while that's blocked;
+# see samconfig.toml. Flip to true and redeploy once the account hold clears.
+
+# sync the frontend + regenerate frontend/config.js with the real API endpoint,
+# invalidate the CDN cache — all three in one step:
+./deploy.sh
+
+# sanity-check the live stack (CORS, upload, extract) any time after a deploy
+./scripts/smoketest.sh
 ```
 
 ## AI tools used
