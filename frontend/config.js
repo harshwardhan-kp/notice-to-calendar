@@ -1,2 +1,1 @@
-// Overwritten by deploy.sh at deploy time with the real API Gateway endpoint.
-window.API_BASE = "http://localhost:3000";
+window.API_BASE = "https://8rghvi6s53.execute-api.ap-south-1.amazonaws.com";
