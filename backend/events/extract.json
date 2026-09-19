@@ -1,0 +1,10 @@
+{
+  "version": "2.0",
+  "routeKey": "POST /extract",
+  "rawPath": "/extract",
+  "requestContext": {
+    "http": { "method": "POST", "path": "/extract" }
+  },
+  "body": "{\"key\": \"uploads/notice-01.jpg\"}",
+  "isBase64Encoded": false
+}

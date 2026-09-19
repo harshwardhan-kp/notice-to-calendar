@@ -158,8 +158,11 @@ function icsDateTime(date, time) {
 }
 
 function addDays(dateStr, days) {
-  const d = new Date(dateStr + "T00:00:00");
-  d.setDate(d.getDate() + days);
+  // Do the arithmetic in UTC and read it back in UTC — mixing local-time
+  // construction with toISOString() (always UTC) rolls the date back a day
+  // for any positive UTC offset, which includes IST.
+  const d = new Date(dateStr + "T00:00:00Z");
+  d.setUTCDate(d.getUTCDate() + days);
   return d.toISOString().slice(0, 10).replace(/-/g, "");
 }
 
