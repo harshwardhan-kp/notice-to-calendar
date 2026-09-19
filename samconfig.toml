@@ -7,7 +7,7 @@ resolve_s3 = true
 capabilities = "CAPABILITY_IAM"
 confirm_changeset = false
 disable_rollback = false
-parameter_overrides = "ModelId=\"anthropic.claude-3-haiku-20240307-v1:0\" BedrockRegion=\"ap-south-1\" AllowedOrigin=\"*\""
+parameter_overrides = "ModelId=\"anthropic.claude-3-haiku-20240307-v1:0\" BedrockRegion=\"ap-south-1\" AllowedOrigin=\"*\" DeployCdn=\"false\""
 
 [default.build.parameters]
 cached = true

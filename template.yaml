@@ -19,6 +19,17 @@ Parameters:
     Description: >
       CORS origin allowed to call the API and PUT to the uploads bucket.
       Tighten to the CloudFront domain before recording the demo.
+  DeployCdn:
+    Type: String
+    Default: "true"
+    AllowedValues: ["true", "false"]
+    Description: >
+      Set to false to stand up the API/backend without CloudFront — for
+      accounts where CloudFront is temporarily blocked (new-account
+      verification hold). Flip to true and redeploy once it clears.
+
+Conditions:
+  CreateCdn: !Equals [!Ref DeployCdn, "true"]
 
 Globals:
   Function:
@@ -56,10 +67,18 @@ Resources:
       Policies:
         - Statement:
             - Effect: Allow
-              Action: s3:GetObject
+              # PutObject is required here even though the browser is the one
+              # that PUTs: a presigned URL is signed with the generating
+              # principal's credentials, and S3 checks that principal's IAM
+              # permissions at USE time, not just generation time. Without
+              # this, every presigned upload 403s.
+              Action: [s3:GetObject, s3:PutObject]
               Resource: !Sub "${UploadsBucket.Arn}/*"
             - Effect: Allow
-              Action: bedrock:InvokeModel
+              # Strands' BedrockModel defaults to streaming (Converse/
+              # ConverseStream), which needs InvokeModelWithResponseStream —
+              # plain InvokeModel alone is not enough.
+              Action: [bedrock:InvokeModel, bedrock:InvokeModelWithResponseStream]
               Resource: !Sub "arn:aws:bedrock:${BedrockRegion}::foundation-model/${ModelId}"
       Events:
         UploadUrl:
@@ -94,6 +113,7 @@ Resources:
 
   SiteOriginAccessControl:
     Type: AWS::CloudFront::OriginAccessControl
+    Condition: CreateCdn
     Properties:
       OriginAccessControlConfig:
         Name: !Sub "${AWS::StackName}-site-oac"
@@ -103,6 +123,7 @@ Resources:
 
   SiteDistribution:
     Type: AWS::CloudFront::Distribution
+    Condition: CreateCdn
     Properties:
       DistributionConfig:
         Enabled: true
@@ -120,6 +141,7 @@ Resources:
 
   SiteBucketPolicy:
     Type: AWS::S3::BucketPolicy
+    Condition: CreateCdn
     Properties:
       Bucket: !Ref SiteBucket
       PolicyDocument:
@@ -139,10 +161,10 @@ Outputs:
     Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com"
   CloudFrontDomain:
     Description: Live URL for the app
-    Value: !Sub "https://${SiteDistribution.DomainName}"
+    Value: !If [CreateCdn, !Sub "https://${SiteDistribution.DomainName}", "CDN not deployed — set DeployCdn=true and redeploy"]
   CloudFrontDistributionId:
     Description: Pass to `aws cloudfront create-invalidation`
-    Value: !Ref SiteDistribution
+    Value: !If [CreateCdn, !Ref SiteDistribution, "none"]
   SiteBucketName:
     Description: Pass to `aws s3 sync frontend/`
     Value: !Ref SiteBucket

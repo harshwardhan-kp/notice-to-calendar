@@ -20,7 +20,10 @@ CLOUDFRONT_DOMAIN=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME
 echo "window.API_BASE = \"${API_ENDPOINT}\";" > frontend/config.js
 
 aws s3 sync frontend/ "s3://${SITE_BUCKET}" --delete
-aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION_ID" --paths "/*" > /dev/null
+
+if [ "$DISTRIBUTION_ID" != "none" ]; then
+  aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION_ID" --paths "/*" > /dev/null
+fi
 
 echo ""
 echo "Deployed."

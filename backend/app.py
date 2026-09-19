@@ -24,7 +24,13 @@ BEDROCK_REGION = os.environ["BEDROCK_REGION"]
 MODEL_ID = os.environ["MODEL_ID"]
 UPLOAD_URL_EXPIRY_SECONDS = 300
 
-s3 = boto3.client("s3")
+# Force the regional endpoint explicitly. boto3's default S3 presigned URL
+# uses the global `s3.amazonaws.com` host regardless of region_name, and for
+# any region other than us-east-1 that host 307-redirects the actual PUT
+# (observed against the deployed stack in ap-south-1) — the fix is to point
+# the client at the region's own endpoint, not just set region_name.
+_region = os.environ["AWS_REGION"]
+s3 = boto3.client("s3", region_name=_region, endpoint_url=f"https://s3.{_region}.amazonaws.com")
 
 CONTENT_TYPE_TO_FORMAT = {
     "image/jpeg": "jpeg",
@@ -73,7 +79,9 @@ def handle_extract(event: dict) -> dict:
     try:
         head = s3.head_object(Bucket=UPLOADS_BUCKET, Key=key)
     except ClientError as exc:
-        if exc.response["Error"]["Code"] in ("404", "NoSuchKey"):
+        # Without s3:ListBucket (deliberately not granted), S3 returns 403 for
+        # a missing key instead of 404, to avoid revealing whether it exists.
+        if exc.response["Error"]["Code"] in ("404", "NoSuchKey", "403"):
             return _response(404, {"error": "Uploaded image not found"})
         raise
 
